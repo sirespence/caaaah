@@ -8,7 +8,7 @@
   ],
   "routes": [
     {
-      "src": "/uv/uv.sw.js",
+      "src": "/sw.js",
       "dest": "index.js",
       "headers": {
         "Service-Worker-Allowed": "/"
