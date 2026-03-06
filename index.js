@@ -10,7 +10,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const bare = createBareServer("/bare/");
 const app  = express();
 
-// Serve custom sw.js from root with Service-Worker-Allowed: /
+// Serve custom sw.js with Service-Worker-Allowed header
 app.get("/sw.js", (req, res) => {
   res.setHeader("Service-Worker-Allowed", "/");
   res.sendFile(join(__dirname, "public", "sw.js"));
@@ -19,17 +19,16 @@ app.get("/sw.js", (req, res) => {
 // Serve UV static files
 app.use("/uv/", express.static(uvPath));
 
-// Serve our frontend from /public
+// Serve frontend static files
 app.use(express.static(join(__dirname, "public")));
 
-// Fallback to index.html
+// Fallback
 app.use((req, res) => {
   res.sendFile(join(__dirname, "public", "index.html"));
 });
 
-const server = createServer();
-
-server.on("request", (req, res) => {
+// Main handler — bare server must intercept BEFORE express
+const server = createServer((req, res) => {
   if (bare.shouldRoute(req)) {
     bare.routeRequest(req, res);
   } else {
@@ -50,4 +49,4 @@ server.listen(port, () => {
   console.log(`ATOM running on port ${port}`);
 });
 
-export default app;
+export default server;
