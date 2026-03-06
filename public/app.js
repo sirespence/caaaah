@@ -1,6 +1,5 @@
 /* ============================================================
-   ATOM — app.js
-   Proxy engine: Ultraviolet + BareMux + Epoxy + Wisp
+   ATOM — app.js  (UV 2.x + bare server)
    ============================================================ */
 
 const ROBLOX = 'https://www.roblox.com';
@@ -37,42 +36,30 @@ const BROWSE_ROBLOX = [
 ];
 
 const BROWSE_WEB = [
-  { e:'🦁', n:'Brave Search',   d:'Private search',      u:'https://search.brave.com' },
-  { e:'📺', n:'YouTube',        d:'Watch videos',         u:'https://www.youtube.com' },
-  { e:'💬', n:'Discord',        d:'Chat',                 u:'https://discord.com/app' },
-  { e:'🟠', n:'Reddit',         d:'Browse communities',  u:'https://www.reddit.com' },
-  { e:'🤖', n:'ChatGPT',        d:'AI assistant',         u:'https://chat.openai.com' },
+  { e:'🦁', n:'Brave Search',   d:'Private search',     u:'https://search.brave.com' },
+  { e:'📺', n:'YouTube',        d:'Watch videos',        u:'https://www.youtube.com' },
+  { e:'💬', n:'Discord',        d:'Chat',                u:'https://discord.com/app' },
+  { e:'🟠', n:'Reddit',         d:'Browse communities', u:'https://www.reddit.com' },
+  { e:'🤖', n:'ChatGPT',        d:'AI assistant',        u:'https://chat.openai.com' },
 ];
 
 /* ── BUILD UI ── */
 function mkCard(item) {
   const el = document.createElement('div');
   el.className = 'card';
-  el.innerHTML = `
-    <div class="c-emoji">${item.e}</div>
-    <div class="c-name">${item.n}</div>
-    <div class="c-live"><div class="c-dot"></div>${item.t} playing</div>
-  `;
+  el.innerHTML = `<div class="c-emoji">${item.e}</div><div class="c-name">${item.n}</div><div class="c-live"><div class="c-dot"></div>${item.t} playing</div>`;
   el.onclick = () => go(item.u, item.n);
   return el;
 }
-
 function mkBrow(item) {
   const el = document.createElement('div');
   el.className = 'bitem';
-  el.innerHTML = `
-    <div class="bi-ico">${item.e}</div>
-    <div>
-      <div class="bi-name">${item.n}</div>
-      <div class="bi-desc">${item.d}</div>
-    </div>
-  `;
+  el.innerHTML = `<div class="bi-ico">${item.e}</div><div><div class="bi-name">${item.n}</div><div class="bi-desc">${item.d}</div></div>`;
   el.onclick = () => go(item.u, item.n);
   return el;
 }
-
-Object.entries(GAMES).forEach(([k, arr]) => {
-  const g = document.getElementById('g-' + k);
+Object.entries(GAMES).forEach(([k,arr]) => {
+  const g = document.getElementById('g-'+k);
   if (g) arr.forEach(i => g.appendChild(mkCard(i)));
 });
 BROWSE_ROBLOX.forEach(i => document.getElementById('b-roblox').appendChild(mkBrow(i)));
@@ -80,44 +67,33 @@ BROWSE_WEB.forEach(i => document.getElementById('b-web').appendChild(mkBrow(i)))
 
 /* ── PAGE NAV ── */
 function page(p) {
-  ['home', 'games', 'browse'].forEach(id => {
-    const pg = document.getElementById('pg-' + id);
-    const sb = document.getElementById('sib-' + id);
+  ['home','games','browse'].forEach(id => {
+    const pg = document.getElementById('pg-'+id);
+    const sb = document.getElementById('sib-'+id);
     if (pg) pg.style.display = 'none';
     if (sb) sb.classList.remove('on');
   });
-  const tgt = document.getElementById('pg-' + p);
-  const btn = document.getElementById('sib-' + p);
-  if (tgt) tgt.style.display = (p === 'home') ? 'flex' : 'block';
+  const tgt = document.getElementById('pg-'+p);
+  const btn = document.getElementById('sib-'+p);
+  if (tgt) tgt.style.display = (p==='home') ? 'flex' : 'block';
   if (btn) btn.classList.add('on');
-  if (p === 'home') setTimeout(() => document.getElementById('hero').focus(), 50);
+  if (p==='home') setTimeout(()=>document.getElementById('hero').focus(), 50);
 }
 
-/* ── UV PROXY ── */
-let _connReady = false;
-let _swReady   = false;
-
-async function setupTransport() {
-  if (_connReady) return;
-  const wispUrl =
-    (location.protocol === 'https:' ? 'wss' : 'ws') +
-    '://' + location.host + '/wisp/';
-  const conn = new BareMux.EpoxyMux();
-  await conn.setTransport('/epoxy/index.js', [{ wisp: wispUrl }]);
-  _connReady = true;
-}
+/* ── UV 2.x PROXY ── */
+let _swReady = false;
 
 async function ensureSW() {
   if (_swReady) return;
   if (!navigator.serviceWorker) throw new Error('Service workers not supported');
-  const reg = await navigator.serviceWorker.register('/uv/sw.js', {
+  const reg = await navigator.serviceWorker.register('/uv/uv.sw.js', {
     scope: __uv$config.prefix,
   });
   await new Promise(resolve => {
     if (reg.active) { resolve(); return; }
     const pending = reg.installing || reg.waiting;
     if (!pending) { resolve(); return; }
-    pending.addEventListener('statechange', function () {
+    pending.addEventListener('statechange', function() {
       if (this.state === 'activated') resolve();
     });
   });
@@ -137,7 +113,7 @@ async function go(raw, title) {
     }
   }
 
-  document.getElementById('addr').value      = url;
+  document.getElementById('addr').value        = url;
   document.getElementById('ftitle').textContent = title || url;
   document.getElementById('furl').textContent   = url;
   document.getElementById('viewer').src         = 'about:blank';
@@ -145,15 +121,13 @@ async function go(raw, title) {
   setStatus('Connecting…', false);
 
   try {
-    await setupTransport();
     await ensureSW();
-    const encoded = __uv$config.prefix + __uv$config.encodeUrl(url);
-    document.getElementById('viewer').src = encoded;
+    document.getElementById('viewer').src = __uv$config.prefix + __uv$config.encodeUrl(url);
     document.getElementById('viewer').onload = () => setStatus('Connected', true);
-  } catch (e) {
+  } catch(e) {
     console.error('Proxy error:', e);
     setStatus('Error', false);
-    showToast('Proxy failed — is the server running? ' + e.message);
+    showToast('Proxy error: ' + e.message);
   }
 }
 
@@ -167,30 +141,20 @@ function setStatus(msg, ok) {
   document.getElementById('stext').textContent = msg;
   const d = document.getElementById('sdot');
   d.style.background = ok ? 'var(--teal)' : '#f0a830';
-  d.style.boxShadow  = ok
-    ? '0 0 5px var(--teal), 0 0 12px rgba(42,255,204,.3)'
-    : '0 0 5px #f0a830';
+  d.style.boxShadow  = ok ? '0 0 5px var(--teal),0 0 12px rgba(42,255,204,.3)' : '0 0 5px #f0a830';
 }
 
-/* ── TOAST ── */
 let _tt;
 function showToast(msg) {
   const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.classList.add('show');
-  clearTimeout(_tt);
-  _tt = setTimeout(() => el.classList.remove('show'), 3500);
+  el.textContent = msg; el.classList.add('show');
+  clearTimeout(_tt); _tt = setTimeout(()=>el.classList.remove('show'), 3500);
 }
-
-/* ── PANIC + KEYS ── */
-function panic() {
-  window.location.replace('https://classroom.google.com');
-}
+function panic() { window.location.replace('https://classroom.google.com'); }
 
 document.addEventListener('keydown', e => {
-  if (e.key === ']') panic();
-  if (e.key === 'Escape') closeFrame();
+  if (e.key===']') panic();
+  if (e.key==='Escape') closeFrame();
 });
 
-/* ── INIT ── */
 page('home');
