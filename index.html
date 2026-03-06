@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ATOM</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<div class="bg"></div>
+<div class="stars"></div>
+
+<div class="shell">
+  <div class="topbar">
+    <div class="logo">ATOM</div>
+    <div class="tb-div"></div>
+    <div class="addr-wrap">
+      <input class="addr-input" id="addr"
+        placeholder="Search Brave or paste a URL..."
+        onkeydown="if(event.key==='Enter') go(this.value)">
+      <div class="addr-go" onclick="go(document.getElementById('addr').value)">↵</div>
+    </div>
+    <div class="status-pill">
+      <div class="sdot" id="sdot"></div>
+      <div class="stext" id="stext">Ready</div>
+    </div>
+  </div>
+
+  <div class="body-row">
+    <div class="sidebar">
+      <div class="sib on" id="sib-home"   onclick="page('home')">
+        <div class="sib-ico">⌂</div><div class="sib-lbl">Home</div>
+      </div>
+      <div class="sib"    id="sib-games"  onclick="page('games')">
+        <div class="sib-ico">◈</div><div class="sib-lbl">Games</div>
+      </div>
+      <div class="sib"    id="sib-browse" onclick="page('browse')">
+        <div class="sib-ico">⊞</div><div class="sib-lbl">Browse</div>
+      </div>
+      <div class="sib-space"></div>
+      <div class="panic" title="Panic  ]" onclick="panic()">⚑</div>
+    </div>
+
+    <div class="main">
+
+      <div id="pg-home">
+        <div class="orb-halo"></div>
+        <div class="home-title">Welcome to ATOM</div>
+        <div class="home-sub">Roblox · Proxy · Space</div>
+        <div class="hero-wrap">
+          <input class="hero-input" id="hero"
+            placeholder="Search Brave or type a URL..."
+            onkeydown="if(event.key==='Enter') go(this.value)">
+          <div class="hero-go" onclick="go(document.getElementById('hero').value)">→</div>
+        </div>
+        <div class="hero-hint">enter to proxy &nbsp;·&nbsp; ] panic &nbsp;·&nbsp; esc close</div>
+      </div>
+
+      <div id="pg-games">
+        <div class="sec-head">Popular</div>
+        <div class="grid" id="g-pop"></div>
+        <div class="sec-head">Action</div>
+        <div class="grid" id="g-act"></div>
+        <div class="sec-head">Roleplay</div>
+        <div class="grid" id="g-rp"></div>
+      </div>
+
+      <div id="pg-browse">
+        <div class="sec-head">Roblox</div>
+        <div class="blist" id="b-roblox"></div>
+        <div class="sec-head">Web</div>
+        <div class="blist" id="b-web"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="frame">
+  <div class="fbar">
+    <div class="tl-red" onclick="closeFrame()"></div>
+    <div class="ftitle" id="ftitle">—</div>
+    <div class="furl" id="furl"></div>
+  </div>
+  <iframe id="viewer" src="about:blank" allowfullscreen
+    allow="fullscreen; autoplay; clipboard-read; clipboard-write"
+    sandbox="allow-forms allow-scripts allow-same-origin allow-popups allow-modals allow-pointer-lock allow-top-navigation-by-user-activation">
+  </iframe>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="/baremux/bare.cjs"></script>
+<script src="/epoxy/index.js"></script>
+<script src="/uv/uv.bundle.js"></script>
+<script src="/uv/uv.config.js"></script>
+<script src="/app.js"></script>
+
+</body>
+</html>
