@@ -10,7 +10,11 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const bare = createBareServer("/bare/");
 const app  = express();
 
-// Serve UV static files
+// Serve UV static files — uv.sw.js needs Service-Worker-Allowed: / header
+app.get("/uv/uv.sw.js", (req, res) => {
+  res.setHeader("Service-Worker-Allowed", "/");
+  res.sendFile(join(uvPath, "uv.sw.js"));
+});
 app.use("/uv/", express.static(uvPath));
 
 // Serve our frontend from /public
