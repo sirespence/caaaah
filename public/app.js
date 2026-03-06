@@ -86,8 +86,8 @@ let _swReady = false;
 async function ensureSW() {
   if (_swReady) return;
   if (!navigator.serviceWorker) throw new Error('Service workers not supported');
-  const reg = await navigator.serviceWorker.register('/uv/uv.sw.js', {
-    scope: '/uv/service/',
+  const reg = await navigator.serviceWorker.register('/sw.js', {
+    scope: '/',
   });
   await new Promise(resolve => {
     if (reg.active) { resolve(); return; }
