@@ -4,150 +4,204 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ATOM</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;500;600;700;800&family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-<div class="bg-grid"></div>
-<div class="bg-orbs">
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  <div class="orb orb-3"></div>
+
+<!-- BACKGROUND -->
+<div class="win-bg">
+  <div class="aurora a1"></div>
+  <div class="aurora a2"></div>
+  <div class="aurora a3"></div>
+  <canvas id="stars-canvas"></canvas>
 </div>
 
 <div class="shell">
-  <!-- TOPBAR -->
-  <div class="topbar">
-    <div class="logo">ATOM</div>
-    <div class="tb-sep"></div>
-    <div class="addr-wrap">
-      <span class="addr-icon">⌕</span>
-      <input class="addr-input" id="addr"
-        placeholder="Search or enter a URL..."
-        onkeydown="if(event.key==='Enter') go(this.value)">
-      <div class="addr-go" onclick="go(document.getElementById('addr').value)">↵</div>
-    </div>
-    <div class="tb-right">
+  <div class="aero-window">
+
+    <!-- TITLE BAR -->
+    <div class="win-chrome">
+      <div class="win-icon">⬡</div>
+      <span class="win-title">ATOM</span>
+      <div class="addr-bar">
+        <span class="addr-lock" id="addr-lock">🔒</span>
+        <input class="addr-input" id="addr"
+          placeholder="Search or enter a URL..."
+          onkeydown="if(event.key==='Enter') go(this.value)">
+        <button class="addr-go" onclick="go(document.getElementById('addr').value)" title="Go">▶</button>
+        <button class="addr-refresh" onclick="refreshFrame()" title="Refresh">↺</button>
+      </div>
       <div class="status-pill">
         <div class="sdot" id="sdot"></div>
         <span class="stext" id="stext">Ready</span>
       </div>
-      <div class="panic-btn" title="Panic  ]" onclick="panic()">
-        <span>⚑</span>
-        <span class="panic-label">Panic</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="body-row">
-    <!-- SIDEBAR -->
-    <div class="sidebar">
-      <div class="sib on" id="sib-home" onclick="page('home')">
-        <div class="sib-ico">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
-        </div>
-        <div class="sib-lbl">Home</div>
-      </div>
-      <div class="sib" id="sib-games" onclick="page('games')">
-        <div class="sib-ico">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="4"/><path d="M6 12h4m-2-2v4"/><circle cx="17" cy="11" r="1" fill="currentColor"/><circle cx="17" cy="14" r="1" fill="currentColor"/></svg>
-        </div>
-        <div class="sib-lbl">Games</div>
-      </div>
-      <div class="sib" id="sib-browse" onclick="page('browse')">
-        <div class="sib-ico">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-        </div>
-        <div class="sib-lbl">Browse</div>
+      <div class="win-controls">
+        <div class="wc-btn wc-min" title="Minimize">─</div>
+        <div class="wc-btn wc-max" title="Maximize">□</div>
+        <div class="wc-btn wc-close" onclick="panic()" title="Panic  ]">✕</div>
       </div>
     </div>
 
-    <!-- MAIN -->
-    <div class="main">
+    <!-- BODY -->
+    <div class="win-body">
 
-      <!-- HOME PAGE -->
-      <div id="pg-home">
-        <div class="home-content">
-          <div class="home-badge">v2 · Proxy + Cloud</div>
-          <h1 class="home-title">Welcome to<br><em>ATOM</em></h1>
-          <p class="home-sub">Roblox · Proxy · Web · Space</p>
-          <div class="hero-wrap">
-            <span class="hero-icon">⌕</span>
-            <input class="hero-input" id="hero"
-              placeholder="Search or enter a URL to proxy..."
-              onkeydown="if(event.key==='Enter') go(this.value)">
-            <button class="hero-go" onclick="go(document.getElementById('hero').value)">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12,5 19,12 12,19"/></svg>
-            </button>
+      <!-- NAV PANE -->
+      <div class="nav-pane">
+        <div class="np-group">
+          <div class="np-item active" id="sib-home" onclick="page('home')">
+            <span class="np-ico">⌂</span>
+            <span class="np-lbl">Home</span>
           </div>
-          <div class="home-shortcuts">
-            <div class="shortcut" onclick="page('games')">
-              <span class="sc-ico">◈</span> Browse Games
-            </div>
-            <div class="shortcut" onclick="goNowGG()">
-              <span class="sc-ico">☁</span> now.gg Roblox
-            </div>
-            <div class="shortcut" onclick="go('https://search.brave.com')">
-              <span class="sc-ico">🦁</span> Brave Search
-            </div>
+          <div class="np-item" id="sib-browse" onclick="page('browse')">
+            <span class="np-ico">🌐</span>
+            <span class="np-lbl">Sites</span>
           </div>
-          <div class="hero-hint">Enter to proxy &nbsp;·&nbsp; ] panic &nbsp;·&nbsp; Esc close</div>
+          <div class="np-item" id="sib-history" onclick="page('history')">
+            <span class="np-ico">⏱</span>
+            <span class="np-lbl">Recent</span>
+          </div>
+        </div>
+        <div class="np-spacer"></div>
+        <div class="np-group">
+          <div class="np-item np-panic" onclick="panic()" title="Panic  ]">
+            <span class="np-ico">⚑</span>
+            <span class="np-lbl">Panic</span>
+          </div>
         </div>
       </div>
 
-      <!-- GAMES PAGE -->
-      <div id="pg-games">
-        <div class="page-header">
-          <h2 class="page-title">Games</h2>
-          <div class="launch-toggle">
-            <span class="lt-label">Launch via</span>
-            <div class="lt-opts">
-              <button class="lt-btn active" id="lt-nowgg" onclick="setLaunchMode('nowgg')">☁ now.gg</button>
-              <button class="lt-btn" id="lt-proxy" onclick="setLaunchMode('proxy')">⚡ Proxy</button>
+      <!-- CONTENT -->
+      <div class="content-area">
+
+        <!-- HOME -->
+        <div id="pg-home" class="page page-home">
+          <div class="home-center">
+            <div class="orb-ring">
+              <div class="orb-glow"></div>
+              <div class="home-orb">ATOM</div>
             </div>
+            <h1 class="home-title">Proxy Browser</h1>
+            <p class="home-sub">Fast · Unblocked · Private</p>
+            <div class="search-glass">
+              <span class="sg-icon">⌕</span>
+              <input class="search-input" id="hero"
+                placeholder="Search or paste any URL..."
+                onkeydown="if(event.key==='Enter') go(this.value)">
+              <button class="search-go" onclick="go(document.getElementById('hero').value)">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </button>
+            </div>
+
+            <!-- Quick launch chips -->
+            <div class="quick-grid">
+              <div class="quick-item quick-featured" onclick="go('https://easyfun.gg/games/roblox.html','Roblox · EasyFun')">
+                <span class="qi-ico">🎮</span>
+                <span class="qi-name">Roblox</span>
+                <span class="qi-badge">CLOUD</span>
+              </div>
+              <div class="quick-item" onclick="go('https://search.brave.com','Brave Search')">
+                <span class="qi-ico">🦁</span>
+                <span class="qi-name">Search</span>
+              </div>
+              <div class="quick-item" onclick="go('https://www.youtube.com','YouTube')">
+                <span class="qi-ico">📺</span>
+                <span class="qi-name">YouTube</span>
+              </div>
+              <div class="quick-item" onclick="go('https://discord.com/app','Discord')">
+                <span class="qi-ico">💬</span>
+                <span class="qi-name">Discord</span>
+              </div>
+              <div class="quick-item" onclick="go('https://www.reddit.com','Reddit')">
+                <span class="qi-ico">🟠</span>
+                <span class="qi-name">Reddit</span>
+              </div>
+              <div class="quick-item" onclick="go('https://chat.openai.com','ChatGPT')">
+                <span class="qi-ico">🤖</span>
+                <span class="qi-name">ChatGPT</span>
+              </div>
+              <div class="quick-item" onclick="go('https://www.instagram.com','Instagram')">
+                <span class="qi-ico">📸</span>
+                <span class="qi-name">Instagram</span>
+              </div>
+              <div class="quick-item" onclick="go('https://www.twitch.tv','Twitch')">
+                <span class="qi-ico">🟣</span>
+                <span class="qi-name">Twitch</span>
+              </div>
+            </div>
+
+            <div class="home-hint">Enter to proxy &nbsp;·&nbsp; ] panic &nbsp;·&nbsp; Esc close frame</div>
           </div>
         </div>
-        <div class="sec-head"><span>🔥 Popular</span></div>
-        <div class="grid" id="g-pop"></div>
-        <div class="sec-head"><span>⚔️ Action</span></div>
-        <div class="grid" id="g-act"></div>
-        <div class="sec-head"><span>🎭 Roleplay</span></div>
-        <div class="grid" id="g-rp"></div>
-        <div class="sec-head"><span>🏆 Classic</span></div>
-        <div class="grid" id="g-classic"></div>
-      </div>
 
-      <!-- BROWSE PAGE -->
-      <div id="pg-browse">
-        <div class="page-header">
-          <h2 class="page-title">Browse</h2>
+        <!-- BROWSE / SITES -->
+        <div id="pg-browse" class="page page-scroll" style="display:none">
+          <div class="pg-header">
+            <h2 class="pg-title">Sites</h2>
+            <p class="pg-sub">All traffic routed through UV proxy</p>
+          </div>
+
+          <div class="sec-label"><span>🎮 Gaming</span></div>
+          <div class="blist" id="b-gaming"></div>
+
+          <div class="sec-label"><span>🌐 Web</span></div>
+          <div class="blist" id="b-web"></div>
+
+          <div class="sec-label"><span>🎵 Media</span></div>
+          <div class="blist" id="b-media"></div>
+
+          <div class="sec-label"><span>🛠️ Useful</span></div>
+          <div class="blist" id="b-useful"></div>
         </div>
-        <div class="sec-head"><span>🎮 Roblox</span></div>
-        <div class="blist" id="b-roblox"></div>
-        <div class="sec-head"><span>🌐 Web</span></div>
-        <div class="blist" id="b-web"></div>
-      </div>
 
+        <!-- HISTORY / RECENT -->
+        <div id="pg-history" class="page page-scroll" style="display:none">
+          <div class="pg-header">
+            <h2 class="pg-title">Recent</h2>
+            <p class="pg-sub">Your proxied session history</p>
+          </div>
+          <div id="history-list" class="blist"></div>
+          <div id="history-empty" class="history-empty">
+            <div class="he-ico">⏱</div>
+            <div class="he-text">No history yet</div>
+            <div class="he-sub">Sites you visit will appear here</div>
+          </div>
+        </div>
+
+      </div>
     </div>
+
+    <!-- STATUS BAR -->
+    <div class="status-bar">
+      <div class="sb-seg">ATOM · UV Proxy</div>
+      <div class="sb-div"></div>
+      <div class="sb-seg sb-mid" id="sb-info">Idle</div>
+      <div class="sb-div"></div>
+      <div class="sb-seg sb-right">] Panic &nbsp;·&nbsp; Esc Close</div>
+    </div>
+
   </div>
 </div>
 
 <!-- PROXY FRAME -->
 <div id="frame">
-  <div class="fbar">
-    <div class="fbar-left">
-      <div class="tl-red" onclick="closeFrame()" title="Close"></div>
-      <div class="ftitle" id="ftitle">—</div>
+  <div class="frame-chrome">
+    <div class="ftl-dots">
+      <div class="ftl-red"    onclick="closeFrame()"></div>
+      <div class="ftl-yellow"></div>
+      <div class="ftl-green"></div>
     </div>
-    <div class="furl-wrap">
-      <span class="furl-icon">🔒</span>
-      <div class="furl" id="furl"></div>
+    <div class="frame-addr">
+      <span class="frame-lock" id="frame-lock">🔒</span>
+      <span class="frame-title" id="ftitle">—</span>
+      <span class="frame-sep">·</span>
+      <span class="frame-url" id="furl">—</span>
     </div>
-    <div class="fbar-right">
-      <div class="fbar-btn" onclick="closeFrame()" title="Close (Esc)">✕ Close</div>
-    </div>
+    <button class="frame-close-btn" onclick="closeFrame()">✕ Close</button>
+  </div>
+  <div class="frame-loading" id="frame-loading">
+    <div class="loading-ring"></div>
+    <div class="loading-text" id="loading-text">Connecting…</div>
   </div>
   <iframe id="viewer" src="about:blank" allowfullscreen
     allow="fullscreen; autoplay; clipboard-read; clipboard-write"
@@ -155,28 +209,7 @@
   </iframe>
 </div>
 
-<!-- GAME LAUNCH MODAL -->
-<div id="modal" class="modal-overlay" onclick="closeModal()">
-  <div class="modal-box" onclick="event.stopPropagation()">
-    <div class="modal-emoji" id="modal-emoji"></div>
-    <div class="modal-name" id="modal-name"></div>
-    <div class="modal-players" id="modal-players"></div>
-    <div class="modal-btns">
-      <button class="modal-btn modal-btn-primary" id="modal-nowgg">
-        <span>☁</span> Play on now.gg
-        <small>Cloud · No download</small>
-      </button>
-      <button class="modal-btn modal-btn-secondary" id="modal-proxy">
-        <span>⚡</span> UV Proxy
-        <small>Local proxy</small>
-      </button>
-    </div>
-    <div class="modal-close" onclick="closeModal()">✕</div>
-  </div>
-</div>
-
 <div class="toast" id="toast"></div>
-
 <script src="/uv/uv.bundle.js"></script>
 <script src="/uv/uv.config.js"></script>
 <script src="/app.js"></script>
