@@ -8,6 +8,13 @@
   ],
   "routes": [
     {
+      "src": "/uv/uv.sw.js",
+      "dest": "index.js",
+      "headers": {
+        "Service-Worker-Allowed": "/"
+      }
+    },
+    {
       "src": "/(.*)",
       "dest": "index.js"
     }
